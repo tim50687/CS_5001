@@ -1,0 +1,37 @@
+Written #1
+
+What are the types of the following value?
+
+1A 50.1
+Answer: float
+
+1B 4	
+Answer: integer
+
+1C -5.0
+Answer: float
+
+1D “hello”
+Answer: string
+
+1E ’15.5’
+Answer: string
+
+Written #2
+
+What do the following expressions evaluate to?
+
+2A 7 / 5
+Answer: 1.4
+
+2B 7.0 / 5.0
+Answer: 1.4
+
+2C 7 // 5	
+Answer: 1
+
+2D 7 % 5
+Answer: 2
+
+2E 1 ** 5
+Answer: 1

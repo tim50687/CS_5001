@@ -1,0 +1,33 @@
+Written #1
+1A
+print_formatted(“that’s awesome!”)
+1B
+max_num = get_max(13, 2)
+1C
+log_two = log_base_two(4)
+
+Written #2
+Because the ‘return’ statement in a function means to send the return value back to the caller and terminate the execution of the function call. Therefore, when running this python file the flow of control will begin at line 9 which executes the main function on line 5, and then goes to line 6, which invokes the divide function. The divide function will then return (x / y) to caller at line 6. After send back the returning value, the execution of the ‘divide’ function will be terminated. That’s why the line 3 in ‘divide’ function will never be executed. 
+
+Written #3
+3A:
+19
+18
+
+3B:
+19
+18
+19
+
+
+Written #4
+I would choose Function #1. This is because if I wanted to know the difference of two squares, the function #1 would return the result that I want, and I can store the result to a variables to do further calculation or use elsewhere across my code. Even If I wanted to see the value, I can just print it on my main function. However, if I chose function #2, the computer would only print out the answer, and that’s it, I cannot do anything further. 
+
+Written #5
+5A
+def divide(x: float, y: float) -> float:
+    return x / y
+    x = x + 5
+
+5B
+It would be more convenient to function caller to use the function, and recognize both the input and return value immediately. 
