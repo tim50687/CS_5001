@@ -1,0 +1,27 @@
+Written #1
+
+1A
+Neither infinite nor an error would result.
+Print out: 
+Danger, Will Robinson!
+Danger, Will Robinson!
+Danger, Will Robinson!
+
+1B
+Neither infinite nor an error would result.
+Print out:
+Lost in Space!
+
+1C
+It is a infinite loop.
+Print out:
+Jupiter-2 Jupiter-2 Jupiter-2 Jupiter-2 ............. 
+
+
+Written #2
+
+2A
+Option1
+
+2B
+It thinks good inputs (like "Sat" or "Sun") are invalid.
