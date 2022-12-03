@@ -92,7 +92,7 @@ def check_battle(computer, player):
         return "PLAYER"
     # if the RPS battle is tie, return draw
     elif computer == player:
-        return "DRAW"
+        return "DRAW!"
 
 
 def tournament():
@@ -109,10 +109,13 @@ def tournament():
     while not stop_game:
         if user_color == "RED":
             computer_color = "BLUE"
-            red_poke = get_player(random.randint(1, 10))  # choose red team pokemon
-            blue_poke = get_player(random.randint(1, 10))  # choose blue team pokemon
+            # choose red team pokemon
+            red_poke = get_player(random.randint(1, 10))
+            # choose blue team pokemon
+            blue_poke = get_player(random.randint(1, 10))
             print(
-                f"{user_color} pokemon {red_poke} v.s. {computer_color} pokemon {blue_poke}"
+                f"{user_color} pokemon {red_poke} v.s.",
+                f"{computer_color} pokemon {blue_poke}",
             )
             # user's RPS
             user_RPS = num2RPS(
@@ -120,11 +123,17 @@ def tournament():
             )
             # computer's RPS
             computer_RPS = num2RPS(random.randint(1, 3))
-            print(f"{red_poke} played {user_RPS}. {blue_poke} played {computer_RPS}")
-            if check_battle(rps2num(computer_RPS), rps2num(user_RPS)) == "COMPUTER":
+            print(
+                f"{red_poke} played {user_RPS}.",
+                f"{blue_poke} played {computer_RPS}",
+            )
+            # turn user and computer RPS to number
+            user_RPS = rps2num(user_RPS)
+            computer_RPS = rps2num(computer_RPS)
+            if check_battle(computer_RPS, user_RPS) == "COMPUTER":
                 print(f"{computer_color} team wins with {blue_poke}!")
                 blue_win += 1
-            elif check_battle(rps2num(computer_RPS), rps2num(user_RPS)) == "PLAYER":
+            elif check_battle(computer_RPS, user_RPS) == "PLAYER":
                 print(f"{user_color} team wins with {red_poke}")
                 red_win += 1
             else:
@@ -145,10 +154,13 @@ def tournament():
 
         else:
             computer_color = "RED"
-            red_poke = get_player(random.randint(1, 10))  # choose red team pokemon
-            blue_poke = get_player(random.randint(1, 10))  # choose blue team pokemon
+            # choose red team pokemon
+            red_poke = get_player(random.randint(1, 10))
+            # choose blue team pokemon
+            blue_poke = get_player(random.randint(1, 10))
             print(
-                f"{user_color} pokemon {blue_poke} v.s. {computer_color} pokemon {red_poke}"
+                f"{user_color} pokemon {blue_poke} v.s.",
+                f"{computer_color} pokemon {red_poke}",
             )
             # user's RPS
             user_RPS = num2RPS(
@@ -156,11 +168,17 @@ def tournament():
             )
             # computer's RPS
             computer_RPS = num2RPS(random.randint(1, 3))
-            print(f"{blue_poke} played {user_RPS}. {red_poke} played {computer_RPS}")
-            if check_battle(rps2num(computer_RPS), rps2num(user_RPS)) == "COMPUTER":
+            print(
+                f"{blue_poke} played {user_RPS}.",
+                f"{red_poke} played {computer_RPS}",
+            )
+            # turn user and computer RPS to number
+            user_RPS = rps2num(user_RPS)
+            computer_RPS = rps2num(computer_RPS)
+            if check_battle(computer_RPS, user_RPS) == "COMPUTER":
                 print(f"{computer_color} team wins with {red_poke}!")
                 red_win += 1
-            elif check_battle(rps2num(computer_RPS), rps2num(user_RPS)) == "PLAYER":
+            elif check_battle(computer_RPS, user_RPS) == "PLAYER":
                 print(f"{user_color} team wins with {blue_poke}")
                 blue_win += 1
             else:

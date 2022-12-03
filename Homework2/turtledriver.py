@@ -5,6 +5,8 @@
     Homework 2: Programming #3
 '''
 import turtle
+
+
 def draw_square(length, X, Y, color, fillColor):
     '''
     Function --
@@ -16,6 +18,7 @@ def draw_square(length, X, Y, color, fillColor):
     :param fillColor: fillcolor
     :return: void
     '''
+
     turtle.fillcolor(fillColor)  # set up the color you want to fill in
     turtle.begin_fill()
     turtle.penup()  # pull the pen up
@@ -54,6 +57,7 @@ def draw_circle(radius, X, Y, color, fillColor):
     turtle.circle(radius)  # draw circle
     turtle.end_fill()
 
+
 def move(fillcolor_square, fillcolor_circle):
     """
     Function --
@@ -71,7 +75,7 @@ def move(fillcolor_square, fillcolor_circle):
     # Clear screen
     turtle.clear()
 
-    ## right now the turtle is facing up! Need to make it turn right!
+    # right now the turtle is facing up! Need to make it turn right!
     turtle.right(90)  # make it turn right
 
     # redraw the fillcolor square (yellow)

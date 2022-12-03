@@ -13,18 +13,18 @@ def black_or_white(row, column):
         False: if the column or row is invalid input
     """
     # Precondition: row and column need to be valid input
-    if check_valid_column(column) == False or check_valid_row(row) == False:
+    if not check_valid_column(column) or not check_valid_row(int(row)):
         return False
     # if ord(chr) is odd or row number is odd return BLACK
-    elif ord(column.lower()) % 2 != 0 and row % 2 != 0:
+    elif ord(column.lower()) % 2 != 0 and int(row) % 2 != 0:
         return "BLACK"
     # if ord(chr) is even or row number is even return BLACK
-    elif ord(column.lower()) % 2 == 0 and row % 2 == 0:
-        return "BlACK"
+    elif ord(column.lower()) % 2 == 0 and int(row) % 2 == 0:
+        return "BLACK"
     # else return "WHITE"
     else:
         return "WHITE"
 
 
 if __name__ == "__main__":
-    print(black_or_white(7, "h"))
+    print(black_or_white(8, "H"))

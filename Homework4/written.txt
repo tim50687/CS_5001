@@ -1,0 +1,24 @@
+Written #1
+1A
+IndexError
+
+1B
+TypeError
+
+1C
+TypeError
+
+Written #2
+2A
+Print out:
+3
+4
+5
+8
+9
+10
+
+2B
+Print out:
+[3, 4, 5]
+[8, 9, 10]
