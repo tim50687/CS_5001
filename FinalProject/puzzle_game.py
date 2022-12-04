@@ -377,6 +377,7 @@ class Turtle(Gameboard):
 def main():
     a = Gameboard()
     print(a.all_puzzle)
+    print("hahaha")
     # a.add_tile()
     # print(get_position_x())
     # print(get_position_y())
