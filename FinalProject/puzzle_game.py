@@ -4,6 +4,7 @@ import random
 from Tile import *
 from PositionService import *
 import os
+from copy import deepcopy
 
 
 class Gameboard:
@@ -22,6 +23,8 @@ class Gameboard:
         for file in os.listdir("./slider_puzzle_project_fall2021_assets-2022")
         if file.endswith(".puz")
     ]
+
+    correct_answer = []
 
     def __init__(
         self,
@@ -155,6 +158,11 @@ class Turtle(Gameboard):
         list, size, thumbnail = self.puzzle_to_list(
             self.defualt_puzzle
         )  # puzzle will change
+
+        ## safe the correct answer by making a deepcopy
+        self.correct_answer = deepcopy(list)
+        print(self.correct_answer)
+
         random.shuffle(list)  # shuffle the puzzle
         count = 0
         puzzle_num_dict = {16: 4, 9: 3, 4: 2}  # use the root
@@ -184,6 +192,11 @@ class Turtle(Gameboard):
         self.tile_list = lst
         # # clear the count
         # self.click_count = 0
+
+    @staticmethod
+    def swap_element_in_list(list, element1, element2):
+        list[element1], list[element2] = list[element2], list[element1]
+        return list
 
     @staticmethod
     def puzzle_to_list(puzzle):
@@ -285,11 +298,12 @@ class Turtle(Gameboard):
             )  # pass in the coordinate, ignore tile and path first
             x += size
             count += 1
+        self.draw_image(self.thumbnail, Gameboard.image_path + thumbnail)
         self.tile_list = lst
         print("reset")
 
     def tile_click(self, x, y):
-        """logic when clicking on the turtle
+        """logic when clicking on the tile, win, and lose
 
         Parameters
         ----------
@@ -326,6 +340,8 @@ class Turtle(Gameboard):
                 < y
                 < adjacent_tile.coordinate_y + adjacent_tile.size / 2
             ):
+                # switch the position in the tile_list to check if the user solve the puzzle
+                # self.swap_element_in_list(self.tile_list, )
                 # switch the tile
                 adjacent_tile.switch(blank)
                 # reset the blank tile x, y
@@ -348,11 +364,26 @@ class Turtle(Gameboard):
         # write the player move and keep update
         self.eraser.clear()
         self.eraser.penup()
-        self.eraser.setpos(-340, -290)
+        self.eraser.setpos(-340, -275)
         self.eraser.pendown()
         self.eraser.write(
-            f"Player move: {self.click_count}", font=("Calibri", 50, "bold")
+            f"Player move: {self.click_count}", font=("Calibri", 30, "bold")
         )
+        # win or lose logic
+        if self.click_count > int(self.play_times):
+            self.lose()
+
+    def win(self):
+        self.draw_image((0, 0), Gameboard.resource_path + "winner.gif")
+        self.wds.update()
+        time.sleep(3)
+        self.wds.bye()
+
+    def lose(self):
+        self.draw_image((0, 0), Gameboard.resource_path + "Lose.gif")
+        self.wds.update()
+        time.sleep(3)
+        self.wds.bye()
 
     def pregame(self, square_func, image_func):
         """Control turtle to implement the pregame layout
@@ -375,13 +406,9 @@ class Turtle(Gameboard):
 
 
 def main():
-    a = Gameboard()
-    print(a.all_puzzle)
-    print("hahaha")
-    # a.add_tile()
-    # print(get_position_x())
-    # print(get_position_y())
-    # # print(help(a))
+    a = Turtle()
+    a.add_tile()
+    print(a.correct_answer)
 
 
 if __name__ == "__main__":
