@@ -1,0 +1,10 @@
+d 6 mario
+d 2 luigi
+tim 32 mario
+leo 22 mario
+ttt 333 mario
+dede 2 mario
+leo 1 mario
+tim 2 luigi
+e 10 mario
+r 7 luigi

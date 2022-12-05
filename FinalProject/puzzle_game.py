@@ -11,7 +11,7 @@ class Gameboard:
 
     resource_path = "./slider_puzzle_project_fall2021_assets-2022/Resources/"
     image_path = "./slider_puzzle_project_fall2021_assets-2022/"
-    defualt_puzzle = "mario"
+    defualt_puzzle = "mario"  # keep track of the current puzzle
     reset_path = resource_path + "resetbutton.gif"
     load_path = resource_path + "loadbutton.gif"
     quit_path = resource_path + "quitbutton.gif"
@@ -71,6 +71,7 @@ class Turtle(Gameboard):
         wds=turtle.Screen(),
         # create a eraser for write player move and clear player move
         eraser=turtle.Turtle(),
+        leader_pencil=turtle.Turtle(),
     ):
         super().__init__(
             name=None,
@@ -88,10 +89,15 @@ class Turtle(Gameboard):
         self.eraser.pencolor("black")  # put on the color
         self.eraser.speed(0)
         self.eraser.hideturtle()
+        self.leader_pencil = leader_pencil
+        self.leader_pencil.pencolor("blue")  # put on the color
+        self.leader_pencil.speed(0)
+        self.leader_pencil.hideturtle()
         self.ttl = ttl
         self.ttl.pencolor("black")  # put on the color
         self.ttl.speed(0)
         self.ttl.width(4)  # thickness of turtle
+        self.ttl.hideturtle()
 
     def splash_screen(self):  # get user data
         self.wds.setup(800, 730)
@@ -108,6 +114,59 @@ class Turtle(Gameboard):
             "CS 5001 Puzzle Slide - Moves",
             "Enter the number of moves (chances) you want (5-200)?",
         )
+
+    @staticmethod
+    def bubble_sort(list):
+        """to sort the leader
+
+        Parameters
+        ----------
+        list : _type_
+            _description_
+        """
+        for passnum in range(len(list) - 1, 0, -1):
+
+            for i in range(passnum):
+                if int(list[i].split()[1]) > int(list[i + 1].split()[1]):
+                    temp = list[i]
+                    list[i] = list[i + 1]
+                    list[i + 1] = temp
+        return list
+
+    def leader_board_info(self):
+        """update the leader board corresponding to the puzzle"""
+        # always shows the top 5 - to do
+        self.leader_pencil.clear()
+        self.leader_pencil.penup()
+        self.leader_pencil.setpos(195, 150)
+        self.leader_pencil.pendown()
+        # create a empty list to store current puzzzle top 5 leader
+        current_leader = []
+        with open("./leader.txt", "r", encoding="utf-8") as f:
+            for line in f:
+                puzzle = line.strip("\n").split(" ")[2]
+                if puzzle == self.defualt_puzzle:
+                    current_leader.append(line)
+
+        self.leader_pencil.write(
+            f"Puzzle: {self.defualt_puzzle}\nLeaders: ",
+            align="left",
+            font=("Calibri", 15, "bold"),
+        )
+        leader_Y_position = 130  # first leader showup position
+        self.bubble_sort(current_leader)
+        for i in range(len(current_leader)):
+            if i > 4:  # only shows up
+                break
+            self.leader_pencil.penup()
+            self.leader_pencil.setpos(195, leader_Y_position)
+            self.leader_pencil.pendown()
+            self.leader_pencil.write(
+                f"{current_leader[i].split()[0]}: {current_leader[i].split()[1]}",
+                align="left",
+                font=("Calibri", 15, "bold"),
+            )
+            leader_Y_position -= 20  # move down a bit
 
     def draw_square(self, tpl):
         x, y, length, width = tpl
@@ -160,8 +219,10 @@ class Turtle(Gameboard):
         )  # puzzle will change
 
         ## safe the correct answer by making a deepcopy
+        ## in order to compare to the tilelist
         self.correct_answer = deepcopy(list)
-        print(self.correct_answer)
+        for i in range(len(self.correct_answer)):
+            self.correct_answer[i] = Gameboard.image_path + self.correct_answer[i]
 
         random.shuffle(list)  # shuffle the puzzle
         count = 0
@@ -171,14 +232,19 @@ class Turtle(Gameboard):
         y = 260
         for i in list:
             ## keep track of the blank tile
+            print(i)
             if "blank" in i:
                 # create a instance to keep track of blank
                 set_position(x, y)
             if count % divisor == 0 and count != 0:
                 y -= size
                 x -= size * divisor
+                if "blank" in i:
+                    # create a instance to keep track of blank
+                    set_position(x, y)
                 astamp = self.draw_image((x, y), Gameboard.image_path + i)
             else:
+                print(i, x, y)
                 astamp = self.draw_image((x, y), Gameboard.image_path + i)
             # create a tile object
             lst.append(
@@ -188,6 +254,8 @@ class Turtle(Gameboard):
             count += 1
         # draw thumbnail
         self.draw_image(self.thumbnail, Gameboard.image_path + thumbnail)
+        #  write leader board
+        self.leader_board_info()
         # everytime add a tile change the tile_data property
         self.tile_list = lst
         # # clear the count
@@ -195,7 +263,24 @@ class Turtle(Gameboard):
 
     @staticmethod
     def swap_element_in_list(list, element1, element2):
-        list[element1], list[element2] = list[element2], list[element1]
+        """swtich the element in the list
+
+        Parameters
+        ----------
+        list : _type_
+            _description_
+        element1 : _type_
+            _description_
+        element2 : _type_
+            _description_
+
+        Returns
+        -------
+        _type_
+            _description_
+        """
+        index1, index2 = list.index(element2), list.index(element1)
+        list[index1], list[index2] = list[index2], list[index1]
         return list
 
     @staticmethod
@@ -256,11 +341,9 @@ class Turtle(Gameboard):
         # get all the puzzle
         puz = "\n".join(Gameboard.all_puzzle)
         new_puzzle = self.wds.textinput("Load Puzzle!", puz)
-        print("tile need to be clean", len(self.tile_list))
         # also need to remove how many time you move
         # for tile in self.tile_list:
         #     self.ttl.clearstamp(tile.astamp)
-        print(-len(self.tile_list))
         self.ttl.clearstamps(-len(self.tile_list) - 1)
         self.click_count = 0
         self.extra_stamp = 0
@@ -268,8 +351,6 @@ class Turtle(Gameboard):
         # clear before puzzle moves
         self.eraser.clear()
         self.add_tile()
-
-        print(self.tile_list[0].image)
 
     def reset_click(self, x, y):
         lst = []
@@ -330,6 +411,7 @@ class Turtle(Gameboard):
                 list.append(tile)
             if "blank" in tile.image:
                 blank = tile
+        print(list)
 
         for adjacent_tile in list:
             if (
@@ -341,7 +423,7 @@ class Turtle(Gameboard):
                 < adjacent_tile.coordinate_y + adjacent_tile.size / 2
             ):
                 # switch the position in the tile_list to check if the user solve the puzzle
-                # self.swap_element_in_list(self.tile_list, )
+                self.swap_element_in_list(self.tile_list, adjacent_tile, blank)
                 # switch the tile
                 adjacent_tile.switch(blank)
                 # reset the blank tile x, y
@@ -370,8 +452,30 @@ class Turtle(Gameboard):
             f"Player move: {self.click_count}", font=("Calibri", 30, "bold")
         )
         # win or lose logic
+        # each click check if user lose logic
         if self.click_count > int(self.play_times):
             self.lose()
+        # then each click check if user win logic
+        for i in range(len(self.tile_list)):
+            if self.tile_list[i].image == self.correct_answer[i]:
+                if (
+                    i == len(self.tile_list) - 1
+                    and self.tile_list[i].image == self.correct_answer[i]
+                    and self.click_count <= int(self.play_times)
+                ):
+                    # put the winner in the txt file
+                    with open("./leader.txt", "a", encoding="utf-8") as f:
+                        f.write(
+                            self.name
+                            + " "
+                            + str(self.click_count)
+                            + " "
+                            + self.defualt_puzzle
+                            + "\n"
+                        )
+                    self.win()
+                continue
+            break
 
     def win(self):
         self.draw_image((0, 0), Gameboard.resource_path + "winner.gif")
@@ -407,8 +511,7 @@ class Turtle(Gameboard):
 
 def main():
     a = Turtle()
-    a.add_tile()
-    print(a.correct_answer)
+    a.leader_board_info()
 
 
 if __name__ == "__main__":

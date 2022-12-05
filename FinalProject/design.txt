@@ -1,8 +1,11 @@
+To do 
+** left hand side tile, it won't work
+
+
 1. gameboard class
 create a layout of the gameboard, to store the layout data
 create a class for tile while add tile on the gameboard
 
-*** left hand side tile, it won't work
 
 2. 
 create a turtle class inherit from Gameboard class to draw
@@ -21,7 +24,12 @@ use Position system :D . to keep track of the blank tile coordinate
 do the logic for winning and losing the game 
 - i. count the user moves
 
+5. after finish win/ lost logic 
+------------------
+6. save the winner count and name to a file and show on the leader (update)
+-> to do: show on the leader board based on different pupzzle -- done
 
+7. fix the bug and exception handling and clean the code  
 
 
 First part - do the splash screeen and anything before game
