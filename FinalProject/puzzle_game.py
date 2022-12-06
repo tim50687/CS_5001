@@ -55,6 +55,7 @@ class Turtle(Gameboard):
     tile_list = []
     click_count = 0
     count_stamp = 0
+    is_reset = False
 
     def __init__(
         self,
@@ -221,6 +222,7 @@ class Turtle(Gameboard):
         ## safe the correct answer by making a deepcopy
         ## in order to compare to the tilelist
         self.correct_answer = deepcopy(list)
+        print("before shuffle", list)
         for i in range(len(self.correct_answer)):
             self.correct_answer[i] = Gameboard.image_path + self.correct_answer[i]
 
@@ -230,6 +232,7 @@ class Turtle(Gameboard):
         divisor = puzzle_num_dict.get(len(list))
         x = -295
         y = 260
+        print(list)
         for i in list:
             ## keep track of the blank tile
             print(i)
@@ -237,8 +240,9 @@ class Turtle(Gameboard):
                 # create a instance to keep track of blank
                 set_position(x, y)
             if count % divisor == 0 and count != 0:
-                y -= size
-                x -= size * divisor
+                print(i)
+                y -= size + 2
+                x -= (size + 2) * divisor
                 if "blank" in i:
                     # create a instance to keep track of blank
                     set_position(x, y)
@@ -250,7 +254,7 @@ class Turtle(Gameboard):
             lst.append(
                 Tile(x, y, Gameboard.image_path + i, size, astamp)
             )  # pass in the coordinate, ignore tile and path first
-            x += size
+            x += size + 2
             count += 1
         # draw thumbnail
         self.draw_image(self.thumbnail, Gameboard.image_path + thumbnail)
@@ -326,8 +330,18 @@ class Turtle(Gameboard):
             self.load_click(x, y)
         # else:
         elif (
-            -355 < x < -355 + (len(self.tile_list) ** (1 / 2)) * size
-            and 320 - (len(self.tile_list) ** (1 / 2)) * size < y < 320
+            -295 - size / 2
+            < x
+            < -295
+            + (len(self.tile_list) ** (1 / 2)) * (size + 2)
+            - size / 2
+            - (len(self.tile_list) ** (1 / 2)) * 2
+            and 260
+            - ((len(self.tile_list) ** (1 / 2)) - 1) * (size + 2)
+            - size / 2
+            - ((len(self.tile_list) ** (1 / 2)) - 1) * 2
+            < y
+            < 260 + size / 2
         ):
             self.tile_click(x, y)
 
@@ -368,8 +382,8 @@ class Turtle(Gameboard):
                 # create a instance to keep track of blank
                 set_position(x, y)
             if count % divisor == 0 and count != 0:
-                y -= size
-                x -= size * divisor
+                y -= size + 2
+                x -= (size + 2) * divisor
                 astamp = self.draw_image((x, y), Gameboard.image_path + i)
             else:
                 astamp = self.draw_image((x, y), Gameboard.image_path + i)
@@ -377,10 +391,11 @@ class Turtle(Gameboard):
             lst.append(
                 Tile(x, y, Gameboard.image_path + i, size, astamp)
             )  # pass in the coordinate, ignore tile and path first
-            x += size
+            x += size + 2
             count += 1
         self.draw_image(self.thumbnail, Gameboard.image_path + thumbnail)
         self.tile_list = lst
+        self.is_reset = True  #
         print("reset")
 
     def tile_click(self, x, y):
@@ -393,20 +408,21 @@ class Turtle(Gameboard):
         y : _type_
             _description_
         """
+        print("inside the tile")
         list = []
-        self.click_count += 1
+        # self.click_count += 1
         blank_x = get_position_x()
         blank_y = get_position_y()
         # find the tile that can be change
         for tile in self.tile_list:
             if (
-                tile.coordinate_x + tile.size == blank_x
-                or tile.coordinate_x - tile.size == blank_x
+                tile.coordinate_x + tile.size + 2 == blank_x
+                or tile.coordinate_x - tile.size - 2 == blank_x
             ) and tile.coordinate_y == blank_y:
                 list.append(tile)
             if (
-                tile.coordinate_y + tile.size == blank_y
-                or tile.coordinate_y - tile.size == blank_y
+                tile.coordinate_y + tile.size + 2 == blank_y
+                or tile.coordinate_y - tile.size - 2 == blank_y
             ) and tile.coordinate_x == blank_x:
                 list.append(tile)
             if "blank" in tile.image:
@@ -426,6 +442,8 @@ class Turtle(Gameboard):
                 self.swap_element_in_list(self.tile_list, adjacent_tile, blank)
                 # switch the tile
                 adjacent_tile.switch(blank)
+                # after using reset button, make user still need to swap the tile to win
+                self.is_reset = False
                 # reset the blank tile x, y
                 set_position(blank.coordinate_x, blank.coordinate_y)
 
@@ -443,14 +461,17 @@ class Turtle(Gameboard):
                     blank.image,
                 )
                 blank.astamp = bstamp  # update the stamp
+                # if user swap tile, click +=1
+                self.click_count += 1
         # write the player move and keep update
-        self.eraser.clear()
-        self.eraser.penup()
-        self.eraser.setpos(-340, -275)
-        self.eraser.pendown()
-        self.eraser.write(
-            f"Player move: {self.click_count}", font=("Calibri", 30, "bold")
-        )
+        if self.click_count >= 1:
+            self.eraser.clear()
+            self.eraser.penup()
+            self.eraser.setpos(-340, -275)
+            self.eraser.pendown()
+            self.eraser.write(
+                f"Player move: {self.click_count}", font=("Calibri", 30, "bold")
+            )
         # win or lose logic
         # each click check if user lose logic
         if self.click_count > int(self.play_times):
@@ -462,6 +483,7 @@ class Turtle(Gameboard):
                     i == len(self.tile_list) - 1
                     and self.tile_list[i].image == self.correct_answer[i]
                     and self.click_count <= int(self.play_times)
+                    and not self.is_reset
                 ):
                     # put the winner in the txt file
                     with open("./leader.txt", "a", encoding="utf-8") as f:

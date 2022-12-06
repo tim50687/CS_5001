@@ -29,7 +29,7 @@ do the logic for winning and losing the game
 6. save the winner count and name to a file and show on the leader (update)
 -> to do: show on the leader board based on different pupzzle -- done
 
-7. fix the bug and exception handling and clean the code  
+7. fix the bug and exception handling and clean the code 
 
 
 First part - do the splash screeen and anything before game
