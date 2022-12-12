@@ -1,5 +1,6 @@
 class PositionService:
-    # track blank tile
+    """Track black tile"""
+
     blank_tile_instance = None
 
     def __init__(self):
